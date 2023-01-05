@@ -1,7 +1,93 @@
+import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebasefunction/firebase_options.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  print('Handling a background message ${message.messageId}');
+}
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+class PushNotificationService {
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  // late AndroidNotificationChannel channel;
+  // late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  PushNotificationService() {
+    getPermission();
+    // initialise();
+    _fcm.getToken().then((token) {
+      print("device token************");
+      print(token);
+    });
+    _fcm.subscribeToTopic('deneme');
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      showDialog(
+        context: navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            title: Text("message geldi"),
+            content: Text("message geldi"),
+          );
+        },
+      );
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      action(message);
+    });
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) => {
+              print("initOn"),
+              if (message != null) {action(message)}
+            });
+  }
+
+  action(RemoteMessage message) async {
+    print(message);
+    print("message girdi");
+  }
+
+  getPermission() async {
+    if (Platform.isIOS) {
+      NotificationSettings settings = await _fcm.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+      print('User granted permission: ${settings.authorizationStatus}');
+    }
+  }
+}
+
+Future<void> main() async {
   runApp(const MyApp());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  PushNotificationService();
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    print('Handling a background message ${message.messageId}');
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -12,6 +98,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      navigatorKey: navigatorKey,
       theme: ThemeData(
         // This is the theme of your application.
         //
