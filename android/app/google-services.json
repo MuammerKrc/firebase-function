@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "718871115063",
+    "project_id": "fir-func-30142",
+    "storage_bucket": "fir-func-30142.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718871115063:android:f2fbdc4dc1b7f5722b56b2",
+        "android_client_info": {
+          "package_name": "com.firebase.cunftion.karaca.firebasefunction"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "718871115063-0rcdtknbfjrkoorg4a2pvgf2vnksubna.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ4VnojPC7IEhr5ee2u38u3EMdAJ5-ZuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "718871115063-0rcdtknbfjrkoorg4a2pvgf2vnksubna.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
